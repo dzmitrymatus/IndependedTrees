@@ -1,0 +1,6 @@
+@IndependedTrees.WebApi_HostAddress = http://localhost:5014
+
+GET {{IndependedTrees.WebApi_HostAddress}}/api/IndependedTrees/
+Accept: application/json
+
+###
