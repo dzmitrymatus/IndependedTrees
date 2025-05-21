@@ -1,6 +1,12 @@
-@IndependedTrees.WebApi_HostAddress = http://localhost:5014
+@IndependedTrees.WebApi_HostAddress = https://localhost:7037
 
-GET {{IndependedTrees.WebApi_HostAddress}}/api/IndependedTrees/
-Accept: application/json
+@skip=0
+@count=1
+POST {{IndependedTrees.WebApi_HostAddress}}/api.user.journal.getRange?skip={{skip}}&count={{count}}
+Content-Type: application/json
+{
+   "from": "2025-05-17T18:43:18.9097288Z",
+   "to": "2025-05-21T18:43:18.9097288Z"
+}
 
 ###

@@ -1,3 +1,11 @@
+using AutoMapper.Extensions.ExpressionMapping;
+using IndependedTrees.BLL.Configuration;
+using IndependedTrees.BLL.Services.Journal;
+using IndependedTrees.DAL;
+using IndependedTrees.DAL.Repository;
+using IndependedTrees.WebApi.Configuration;
+using IndependedTrees.WebApi.ExceptionsHandler;
+using Microsoft.EntityFrameworkCore;
 
 namespace IndependedTrees.WebApi
 {
@@ -7,28 +15,42 @@ namespace IndependedTrees.WebApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
-            builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+            ConfigureAppDb(builder.Services, builder.Configuration);
+            ConfigureBusinessServices(builder.Services, builder.Configuration);
+            ConfigureAppServices(builder.Services, builder.Configuration);
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
             }
-
+            app.UseExceptionHandler(o => { }); //https://github.com/dotnet/aspnetcore/issues/51888
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();
+        }
+
+        private static void ConfigureAppDb(IServiceCollection services, IConfiguration configuration)
+        {
+            string? connection = configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<IndependedTreesDbContext>(options => options.UseSqlServer(connection));
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        }
+
+        private static void ConfigureBusinessServices(IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScoped<IExceptionsJournalService, ExceptionsJournalService>();
+        }
+
+        private static void ConfigureAppServices(IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddControllers();
+            services.AddOpenApi();
+            services.AddAutoMapper(cfg => cfg.AddExpressionMapping(), typeof(BLLMappingProfile), typeof(MappingProfile));
+            services.AddExceptionHandler<GlobalExceptionsHandler>();
         }
     }
 }
