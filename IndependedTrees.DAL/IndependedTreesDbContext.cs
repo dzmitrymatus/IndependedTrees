@@ -1,4 +1,5 @@
 ﻿using IndependedTrees.DAL.Models.Journal;
+using IndependedTrees.DAL.Models.Tree;
 using Microsoft.EntityFrameworkCore;
 
 namespace IndependedTrees.DAL
@@ -6,6 +7,7 @@ namespace IndependedTrees.DAL
     public class IndependedTreesDbContext : DbContext
     {
         public DbSet<JournalRecord> Journal { get; set; }
+        public DbSet<TreeNode> TreeNodes { get; set; }
 
         public IndependedTreesDbContext() : base() { }
 

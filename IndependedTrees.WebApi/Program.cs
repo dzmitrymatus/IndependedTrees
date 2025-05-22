@@ -1,6 +1,7 @@
 using AutoMapper.Extensions.ExpressionMapping;
 using IndependedTrees.BLL.Configuration;
 using IndependedTrees.BLL.Services.Journal;
+using IndependedTrees.BLL.Services.Trees;
 using IndependedTrees.DAL;
 using IndependedTrees.DAL.Repository;
 using IndependedTrees.WebApi.Configuration;
@@ -43,6 +44,7 @@ namespace IndependedTrees.WebApi
         private static void ConfigureBusinessServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IExceptionsJournalService, ExceptionsJournalService>();
+            services.AddScoped<IIndependedTreesService, IndependedTreesService>();
         }
 
         private static void ConfigureAppServices(IServiceCollection services, IConfiguration configuration)
