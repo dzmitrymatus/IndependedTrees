@@ -1,22 +1,43 @@
 @IndependedTrees.WebApi_HostAddress = https://localhost:7037
 
 @skip=0
-@count=1
+@count=100
 POST {{IndependedTrees.WebApi_HostAddress}}/api.user.journal.getRange?skip={{skip}}&count={{count}}
 Content-Type: application/json
 {
    "from": "2025-05-17T18:43:18.9097288Z",
-   "to": "2025-05-21T18:43:18.9097288Z"
+   "to": "2025-05-23T18:43:18.9097288Z"
 }
 ###
 
-@treeName=ALevel
-POST {{IndependedTrees.WebApi_HostAddress}}/api.user.tree.get?treeName={{treeName}}
+@id=d2836263-bffc-465c-a069-0926b525e6ef
+POST {{IndependedTrees.WebApi_HostAddress}}/api.user.journal.getSingle?id={{id}}
+###
+
+POST {{IndependedTrees.WebApi_HostAddress}}/api.user.tree.getAll
+###
+
+@getTreeName=CLevel
+POST {{IndependedTrees.WebApi_HostAddress}}/api.user.tree.get?treeName={{getTreeName}}
+###
+
+@newTreeName=CLevel
+POST {{IndependedTrees.WebApi_HostAddress}}/api.user.tree.create?treeName={{newTreeName}}
 ###
 
 @treeName=ALevel
-@parentNodeId=2
-@nodeName=ExampleNode
-POST {{IndependedTrees.WebApi_HostAddress}}/api.user.tree.node.create?treeName={{treeName}}&parentNodeId={{parentNodeId}}&nodeName={{nodeName}}
+@parentNodeId=10
+@nodeName=DLevel1
+POST {{IndependedTrees.WebApi_HostAddress}}/api.user.tree.node.create?treeName={{getTreeName}}&parentNodeId={{parentNodeId}}&nodeName={{nodeName}}
+###
 
+@treeName=ALevel
+@nodeId=2
+@newNodeName=Blevel2
+POST {{IndependedTrees.WebApi_HostAddress}}/api.user.tree.node.rename?treeName={{treeName}}&nodeId={{nodeId}}&newNodeName={{newNodeName}}
+###
+
+@treeName=ALevel
+@nodeId=7
+POST {{IndependedTrees.WebApi_HostAddress}}/api.user.tree.node.delete?treeName={{treeName}}&nodeId={{nodeId}}
 ###
