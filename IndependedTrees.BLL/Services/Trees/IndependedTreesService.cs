@@ -22,7 +22,6 @@ namespace IndependedTrees.BLL.Services.Trees
         {
             var treeHead = await GetTreeHeadAsync(treeName)
                 .ContinueWith(task => this._mapper.Map<TreeNodeModel>(task.Result));
-
             var treeNodes = await GetTreeNodesAsync(treeHead.TreeId)
                 .ContinueWith(task => this._mapper.Map<IEnumerable<TreeNodeModel>>(task.Result));
 
@@ -37,7 +36,7 @@ namespace IndependedTrees.BLL.Services.Trees
                 .GetAllAsync(x => x.Where(item => item.ParentId == null))
                 .ContinueWith(task => this._mapper.Map<IEnumerable<TreeNodeModel>>(task.Result));
 
-            foreach(var treeHead in treeHeads)
+            foreach (var treeHead in treeHeads)
             {
                 var treeNodes = await GetTreeNodesAsync(treeHead.TreeId)
                     .ContinueWith(task => this._mapper.Map<IEnumerable<TreeNodeModel>>(task.Result));
@@ -51,7 +50,7 @@ namespace IndependedTrees.BLL.Services.Trees
         public async Task CreateTreeAsync(string treeName)
         {
             var trees = await this._repository.GetAllAsync(x => x.Where(item => item.ParentId == null));
-            if(trees.Any(x => x.Name.Equals(treeName)))
+            if (trees.Any(x => x.Name.Equals(treeName)))
                 throw new SecureException($"Tree with name '{treeName}' already exist.");
 
             var maxTreeId = trees.Max(x => x.TreeId);
@@ -60,7 +59,7 @@ namespace IndependedTrees.BLL.Services.Trees
             {
                 Name = treeName,
                 ParentId = null,
-                TreeId = maxTreeId.HasValue? maxTreeId + 1 : 0
+                TreeId = maxTreeId.HasValue ? maxTreeId + 1 : 0
             };
 
             await this._repository.InsertAsync(node);
@@ -71,7 +70,7 @@ namespace IndependedTrees.BLL.Services.Trees
             var treeHead = await GetTreeHeadAsync(treeName);
             var treeNodes = await GetTreeNodesAsync(treeHead.TreeId);
 
-            if(treeNodes.Where(x => x.Id == parentNodeId).Any() == false)
+            if (treeNodes.Where(x => x.Id == parentNodeId).Any() == false)
                 throw new SecureException($"Parent TreeNode with id '{parentNodeId}' doesn't exist.");
 
             if (treeNodes.Where(x => x.ParentId == parentNodeId).Any(x => x.Name.Equals(nodeName)))
@@ -90,11 +89,11 @@ namespace IndependedTrees.BLL.Services.Trees
         public async Task RenameTreeNodeAsync(string treeName, int nodeId, string newNodeName)
         {
             var treeHead = await GetTreeHeadAsync(treeName);
-            var node = await GetTreeNodeAsync(treeHead.Id, nodeId);            
+            var node = await GetTreeNodeAsync(treeHead.Id, nodeId);
             var siblingNodes = await this._repository.GetAllAsync(
                 x => x.Where(item => item.ParentId == node.ParentId));
 
-            if (siblingNodes.Any(item => item.Name.Equals(newNodeName))) 
+            if (siblingNodes.Any(item => item.Name.Equals(newNodeName)))
                 throw new SecureException($"TreeNode with name '{newNodeName}' already exist.");
 
             node.Name = newNodeName;
@@ -107,7 +106,7 @@ namespace IndependedTrees.BLL.Services.Trees
             var treeHead = await GetTreeHeadAsync(treeName);
 
             var node = await GetTreeNodeAsync(treeHead.TreeId, nodeId);
-                
+
             var childNodes = await this._repository.GetAllAsync(
                 x => x.Where(item => item.ParentId == node.Id));
 
@@ -150,7 +149,7 @@ namespace IndependedTrees.BLL.Services.Trees
         private IEnumerable<TreeNodeModel> GenerateTree(IEnumerable<TreeNodeModel> nodes, int? parentId)
         {
             var childNodes = nodes.Where(x => x.ParentId == parentId);
-            foreach(var childNode in childNodes)
+            foreach (var childNode in childNodes)
             {
                 childNode.Childrens = GenerateTree(nodes, childNode.Id);
             }

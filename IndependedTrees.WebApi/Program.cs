@@ -25,6 +25,7 @@ namespace IndependedTrees.WebApi
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "IndependedTrees"));
             }
             app.UseExceptionHandler(o => { }); //https://github.com/dotnet/aspnetcore/issues/51888
             app.UseHttpsRedirection();
